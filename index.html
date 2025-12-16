@@ -167,6 +167,24 @@
             font-size: 0.9rem;
         }
 
+        .blog-post code {
+            background: #1a1a2e;
+            color: #a78bfa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .blog-post a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .blog-post a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.8rem;
@@ -217,28 +235,35 @@
                 <h2>Blog</h2>
                 
                 <article class="blog-post">
-                    <h3>Migrating to Apollo iOS 2.0: A Team Journey</h3>
-                    <p class="date">December 2024</p>
+                    <h3>Migrating to Apollo iOS 2.0: What You Need to Know</h3>
+                    <p class="date">December 2025</p>
                     <p>
-                        Our iOS team recently completed a significant migration from Apollo iOS 1.x to version 2.0.3. 
-                        This was a breaking change that required careful planning and execution. I had the opportunity 
-                        to provide technical guidance and code reviews throughout the process, working alongside 
-                        a talented engineer who drove the implementation.
+                        My team recently completed the migration from Apollo iOS 1.x to 2.0.3. This is a 
+                        breaking change that requires careful planning—here's what we learned and what 
+                        to watch out for if you're considering the upgrade.
                     </p>
                     <p>
-                        <strong>Why we upgraded:</strong>
+                        <strong>Why migrate now?</strong>
                     </p>
                     <ul>
-                        <li><strong>Swift 6 & Modern Concurrency</strong> — Apollo 2.0 was completely reimplemented using async/await and structured concurrency, replacing the old callback-based APIs</li>
-                        <li><strong>Improved Thread Safety</strong> — Most types now conform to Sendable, making our codebase more robust in concurrent scenarios</li>
-                        <li><strong>Future-proofing</strong> — CocoaPods support was dropped in 2.0, so staying on 1.x would have meant falling behind on critical updates</li>
-                        <li><strong>Better Type Safety</strong> — Streamlined APIs with clearer separation of concerns and more precise typing</li>
+                        <li><strong>Swift 6 & async/await</strong> — Apollo 2.0 replaces callback-based APIs with structured concurrency. If you're adopting Swift 6, this alignment is essential</li>
+                        <li><strong>Sendable conformance</strong> — Most types now conform to Sendable, eliminating common thread-safety issues in concurrent code</li>
+                        <li><strong>CocoaPods is gone</strong> — 2.0 drops CocoaPods support entirely. If you're still on 1.x, you're falling behind on security patches</li>
+                        <li><strong>Minimum iOS 15+</strong> — The new deployment target may require dropping support for older devices</li>
                     </ul>
                     <p>
-                        The migration involved updating our minimum deployment target to iOS 15+, refactoring 
-                        custom interceptors to the new framework, and incrementally moving from callbacks to 
-                        async/await patterns. It was a great example of how thorough code reviews and 
-                        collaborative problem-solving can help a team navigate a complex upgrade smoothly.
+                        <strong>Key migration steps:</strong>
+                    </p>
+                    <ul>
+                        <li><strong>Re-run code generation</strong> — Update your dependency and run codegen with the 2.0 engine first. This surfaces most breaking changes immediately</li>
+                        <li><strong>Refactor custom interceptors</strong> — The old <code>ApolloInterceptor</code> protocol is split into discrete types: <code>GraphQLInterceptor</code>, <code>HTTPInterceptor</code>, <code>CacheInterceptor</code>, and <code>ResponseParsingInterceptor</code>. We had existing interceptors for auth tokens and custom headers—these needed to be refactored to the new <code>HTTPInterceptor</code> protocol with async/await signatures</li>
+                        <li><strong>Update GraphQL response handling</strong> — <code>GraphQLResult</code> is now <code>GraphQLResponse</code> and is generic over the operation type, not just the data</li>
+                        <li><strong>Handle cache misses differently</strong> — Cache misses now return <code>nil</code> instead of throwing errors. Update any error-handling logic accordingly</li>
+                        <li><strong>SPI imports for custom scalars</strong> — If you have custom scalar types, you'll see "does not conform to protocol" errors. Fix these by updating the import to <code>@_spi(Execution) @_spi(Internal) import ApolloAPI</code>. Apollo now uses SPI attributes to protect internal APIs</li>
+                    </ul>
+                    <p>
+                        The full migration guide is available in the 
+                        <a href="https://www.apollographql.com/docs/ios/migrations/2.0" target="_blank">Apollo iOS documentation</a>.
                     </p>
                 </article>
 
