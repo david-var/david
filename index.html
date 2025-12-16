@@ -120,6 +120,53 @@
             font-size: 0.85rem;
         }
 
+        /* Blog styles */
+        .blog-post {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .blog-post:last-child {
+            margin-bottom: 0;
+        }
+
+        .blog-post h3 {
+            font-size: 1.1rem;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+
+        .blog-post .date {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .blog-post p {
+            margin-bottom: 12px;
+        }
+
+        .blog-post p:last-child {
+            margin-bottom: 0;
+        }
+
+        .blog-post ul {
+            flex-direction: column;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .blog-post ul li {
+            background: #e8eaff;
+            color: #4a5568;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.8rem;
@@ -151,17 +198,50 @@
             <section>
                 <h2>Skills</h2>
                 <ul>
+                    <li>Swift</li>
+                    <li>iOS</li>
                     <li>JavaScript</li>
                     <li>TypeScript</li>
                     <li>Node.js</li>
                     <li>React</li>
                     <li>Python</li>
+                    <li>GraphQL</li>
                     <li>SQL</li>
                     <li>AWS</li>
-                    <li>Docker</li>
                     <li>System Design</li>
                     <li>Team Leadership</li>
                 </ul>
+            </section>
+
+            <section>
+                <h2>Blog</h2>
+                
+                <article class="blog-post">
+                    <h3>Migrating to Apollo iOS 2.0: A Team Journey</h3>
+                    <p class="date">December 2024</p>
+                    <p>
+                        Our iOS team recently completed a significant migration from Apollo iOS 1.x to version 2.0.3. 
+                        This was a breaking change that required careful planning and execution. I had the opportunity 
+                        to provide technical guidance and code reviews throughout the process, working alongside 
+                        a talented engineer who drove the implementation.
+                    </p>
+                    <p>
+                        <strong>Why we upgraded:</strong>
+                    </p>
+                    <ul>
+                        <li><strong>Swift 6 & Modern Concurrency</strong> — Apollo 2.0 was completely reimplemented using async/await and structured concurrency, replacing the old callback-based APIs</li>
+                        <li><strong>Improved Thread Safety</strong> — Most types now conform to Sendable, making our codebase more robust in concurrent scenarios</li>
+                        <li><strong>Future-proofing</strong> — CocoaPods support was dropped in 2.0, so staying on 1.x would have meant falling behind on critical updates</li>
+                        <li><strong>Better Type Safety</strong> — Streamlined APIs with clearer separation of concerns and more precise typing</li>
+                    </ul>
+                    <p>
+                        The migration involved updating our minimum deployment target to iOS 15+, refactoring 
+                        custom interceptors to the new framework, and incrementally moving from callbacks to 
+                        async/await patterns. It was a great example of how thorough code reviews and 
+                        collaborative problem-solving can help a team navigate a complex upgrade smoothly.
+                    </p>
+                </article>
+
             </section>
 
             <section>
