@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Offline Mode for Field Scouting - David Vardanyan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 40px;
+        }
+
+        .back-link {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 1rem;
+            color: #a0aec0;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        ul li {
+            background: #f3f4f6;
+            color: #4a5568;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            border-left: 4px solid #667eea;
+        }
+
+        code {
+            background: #1a1a2e;
+            color: #a78bfa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f7f7f7;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            header, .content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-link">← Back to Home</a>
+            <h1>Building Offline Mode for Field Scouting in AgTech</h1>
+            <p class="date">November 2025</p>
+        </header>
+
+        <div class="content">
+            <p>
+                My team built offline support for the Scouting feature in AGMRI, an AgTech platform 
+                for crop monitoring. Scouting lets agronomists walk or drive through fields, drop pins 
+                at specific locations, and record observations—crop health, pest damage, disease, 
+                growth stage—with photos and notes. The challenge: reliable connectivity in rural 
+                farmland is rare. Here's how we made it work offline.
+            </p>
+
+            <p><strong>The data model:</strong></p>
+            <ul>
+                <li><strong>Scout Reports</strong> — Container for a scouting session with multiple observations</li>
+                <li><strong>Observations</strong> — Individual pins with GPS coordinates, severity ratings, notes, photos, and short videos</li>
+                <li><strong>Map tiles</strong> — Pre-downloaded field boundaries and satellite imagery via MapBox</li>
+            </ul>
+
+            <p><strong>Architecture decisions:</strong></p>
+            <ul>
+                <li><strong>Realm for structured data</strong> — Scout reports, observations, and metadata are stored in Realm. It handles relationships well and supports offline-first patterns out of the box</li>
+                <li><strong>File system for MapBox</strong> — Map tiles and offline packs are managed by MapBox's SDK, stored separately from the app database</li>
+                <li><strong>Compressed media</strong> — Photos and videos are compressed before local storage to manage disk usage. In practice, users haven't exceeded 2-3GB, but this needs monitoring</li>
+            </ul>
+
+            <p><strong>Sync strategy:</strong></p>
+            <ul>
+                <li><strong>Manual upload trigger</strong> — Users explicitly sync when back online. This avoids unexpected data usage on metered connections and gives users control</li>
+                <li><strong>Local queue with retry</strong> — Failed uploads are queued and retried automatically until successful. No data is lost if sync is interrupted</li>
+                <li><strong>Network detection</strong> — <code>NWPathMonitor</code> detects connectivity changes, plus a manual offline toggle for users who want to force offline mode</li>
+            </ul>
+
+            <p><strong>UX considerations:</strong></p>
+            <ul>
+                <li><strong>Offline indicator</strong> — Clear visual feedback when the app is in offline mode</li>
+                <li><strong>Scoped functionality</strong> — Only the Scouting section is available offline. Other features gracefully indicate they require connectivity</li>
+                <li><strong>Pre-download workflow</strong> — Users select field areas to download before heading out. The app downloads map tiles for those regions</li>
+            </ul>
+        </div>
+
+        <footer>
+            &copy; 2025 David Vardanyan
+        </footer>
+    </div>
+</body>
+</html>
